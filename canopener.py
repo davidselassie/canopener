@@ -25,7 +25,11 @@ class gzfile(gzip.GzipFile, WithMixin):
 
     Only required in Python <= 2.6.
     """
-    pass
+
+    def close(self):
+        super(gzfile, self).close()
+        if self.fileobj is not None:
+            self.fileobj.close()
 
 
 class canopener(file):
