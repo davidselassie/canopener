@@ -14,14 +14,14 @@ class WithMixin(object):
         self.close()
 
 class bz2file(bz2.BZ2File, WithMixin):
-    """Wrapper around bz2.BZ2File that iparts `with` powers.
+    """Wrapper around bz2.BZ2File that imparts `with` powers.
 
     Only required in Python <= 2.6.
     """
     pass
 
 class gzfile(gzip.GzipFile, WithMixin):
-    """Wrapper around gzip.GzipFile that iparts `with` powers.
+    """Wrapper around gzip.GzipFile that imparts `with` powers.
 
     Only required in Python <= 2.6.
     """
