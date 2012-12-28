@@ -2,6 +2,8 @@
 
 import bz2
 import gzip
+import urllib2
+import urlparse
 
 
 class WithMixin(object):
@@ -32,13 +34,24 @@ class gzfile(gzip.GzipFile, WithMixin):
             self.fileobj.close()
 
 
-class canopener(file):
-    """Convenience opener. Seamlessly decompresses .gz and .bz2 files."""
+class canopener(object):
+    """Convenience opener. Seamlessly decompresses .gz and .bz2 URLs and files.
+    """
 
     def __new__(cls, filename, mode='r'):
-        if filename.endswith('.gz'):
-            return gzfile(filename, mode)
-        elif filename.endswith('.bz2'):
-            return bz2file(filename, mode)
+        # Open the base file stream.
+        parse = urlparse.urlparse(filename)
+        if parse.netloc:
+            if mode[0] != 'r':
+                raise ValueError("can't write to URLs")
+            base_file = urllib2.urlopen(filename)
         else:
-            return cls(filename, mode)
+            base_file = open(filename, mode)
+
+        # Now wrap it in any decompression.
+        if filename.endswith('.gz'):
+            return gzfile(fileobj=base_file, mode=mode)
+        elif filename.endswith('.bz2'):
+            return bz2file(base_file, mode)
+        else:
+            return base_file
