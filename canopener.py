@@ -30,6 +30,8 @@ class gzfile(gzip.GzipFile, WithMixin):
 
     def close(self):
         super(gzfile, self).close()
+        # Close the underlying fileobj if it exists. gzip.GzipFile doesn't do
+        # this by default to enable writing uncompressed sections to a file.
         if self.fileobj is not None:
             self.fileobj.close()
 
