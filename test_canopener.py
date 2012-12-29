@@ -16,6 +16,12 @@ class FileMock(StringIO.StringIO):
     def __init__(self, filename=None, mode=None):
         StringIO.StringIO.__init__(self, '')
 
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *args):
+        self.close()
+
 
 @patch('__builtin__.open', FileMock)
 class CompressedFileTestCase(TestCase):
@@ -52,27 +58,23 @@ class GzipfileTestCase(CompressedFileTestCase):
 @patch('__builtin__.open', FileMock)
 class CanopenerTestCase(TestCase):
     # Becaue bz2 is implemented as a pure C module, we can't mock out stuff inside.
+    @patch('canopener.bz2file', FileMock)
     def test_bz2path(self):
-        with patch('canopener.bz2file') as mock_bz2file:
-            test_file = canopener.canopener('blahblah.bz2')
-            # No way to test instance, since won't be a bz2file.
-            test_file.close()
+        with canopener.canopener('blahblah.bz2') as test_file:
+            assert isinstance(test_file, FileMock)
     
     def test_gzpath(self):
-        test_file = canopener.canopener('blahblah.gz')
-        assert isinstance(test_file, canopener.gzfile)
-        test_file.close()
+        with canopener.canopener('blahblah.gz') as test_file:
+            assert isinstance(test_file, canopener.gzfile)
 
     def test_local(self):
-        test_file = canopener.canopener('blahblah')
-        assert isinstance(test_file, FileMock)
-        test_file.close()
+        with canopener.canopener('blahblah') as test_file:
+            assert isinstance(test_file, FileMock)
 
     @patch('canopener.urllib2.urlopen', FileMock)
     def test_url(self):
-        test_file = canopener.canopener('http://blahblah/blah')
-        assert isinstance(test_file, FileMock)
-        test_file.close()
+        with canopener.canopener('http://blahblah/blah') as test_file:
+            assert isinstance(test_file, FileMock)
 
     def test_cant_write_url(self):
         with assert_raises(ValueError):
