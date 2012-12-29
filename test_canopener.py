@@ -10,6 +10,7 @@ from testify import TestCase
 from testify import assert_raises
 
 import canopener
+import s3file
 
 
 class FileMock(StringIO.StringIO):
@@ -79,6 +80,12 @@ class CanopenerTestCase(TestCase):
     def test_cant_write_url(self):
         with assert_raises(ValueError):
             canopener.canopener('http://blahblah/blah', 'w')
+
+    @patch('s3file.S3Connection')
+    @patch('s3file.tempfile.TemporaryFile', FileMock)
+    def test_s3_url(self, s3_conn_mock):
+        with canopener.canopener('s3://blahblah/blah') as test_file:
+            assert isinstance(test_file, FileMock)
 
 
 if __name__ == "__main__":

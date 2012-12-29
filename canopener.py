@@ -46,7 +46,11 @@ class canopener(object):
         if parse.netloc:
             if mode[0] != 'r':
                 raise ValueError("can't write to URLs")
-            base_file = urllib2.urlopen(filename)
+            if parse.scheme == 's3':
+                from s3file import s3file
+                base_file = s3file(filename)
+            else:
+                base_file = urllib2.urlopen(filename)
         else:
             base_file = open(filename, mode)
 
