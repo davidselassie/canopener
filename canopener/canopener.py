@@ -44,7 +44,7 @@ class canopener(object):
         # Open the base file stream.
         parse = urlparse.urlparse(filename)
         if parse.netloc:
-            if mode[0] != 'r':
+            if 'w' in mode:
                 raise ValueError("can't write to URLs")
             if parse.scheme == 's3':
                 from s3file import s3file

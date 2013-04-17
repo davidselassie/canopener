@@ -9,10 +9,12 @@ import testify
 from testify import TestCase
 from testify import assert_raises
 
-import canopener
-import s3file
+from ..canopener import canopener
+from ..canopener import gzfile
+from ..canopener import bz2file
 
 
+# We can't use cStringIO, since we're mocking out the constructor.
 class FileMock(StringIO.StringIO):
     def __init__(self, filename=None, mode=None):
         StringIO.StringIO.__init__(self, '')
@@ -49,42 +51,44 @@ class CompressedFileTestCase(TestCase):
         with self.opener(FileMock()) as test_file:
             assert isinstance(test_file, self.expected_class)
 
+
 # Becaue bz2 is implemented as a pure C module, we can't mock out stuff inside and test.
 
+
 class GzipfileTestCase(CompressedFileTestCase):
-    opener = canopener.gzfile
+    opener = gzfile
     expected_class = gzip.GzipFile
 
 
 @patch('__builtin__.open', FileMock)
 class CanopenerTestCase(TestCase):
     # Becaue bz2 is implemented as a pure C module, we can't mock out stuff inside.
-    @patch('canopener.bz2file', FileMock)
+    @patch('canopener.canopener.bz2file', FileMock)
     def test_bz2path(self):
-        with canopener.canopener('blahblah.bz2') as test_file:
+        with canopener('blahblah.bz2') as test_file:
             assert isinstance(test_file, FileMock)
-    
+
     def test_gzpath(self):
-        with canopener.canopener('blahblah.gz') as test_file:
-            assert isinstance(test_file, canopener.gzfile)
+        with canopener('blahblah.gz') as test_file:
+            assert isinstance(test_file, gzfile)
 
     def test_local(self):
-        with canopener.canopener('blahblah') as test_file:
+        with canopener('blahblah') as test_file:
             assert isinstance(test_file, FileMock)
 
-    @patch('canopener.urllib2.urlopen', FileMock)
+    @patch('canopener.canopener.urllib2.urlopen', FileMock)
     def test_url(self):
-        with canopener.canopener('http://blahblah/blah') as test_file:
+        with canopener('http://blahblah/blah') as test_file:
             assert isinstance(test_file, FileMock)
 
     def test_cant_write_url(self):
         with assert_raises(ValueError):
-            canopener.canopener('http://blahblah/blah', 'w')
+            canopener('http://blahblah/blah', 'w')
 
-    @patch('s3file.S3Connection')
-    @patch('s3file.tempfile.TemporaryFile', FileMock)
+    @patch('canopener.s3file.make_s3_connection', autospec=True)
+    @patch('canopener.s3file.tempfile.TemporaryFile', FileMock)
     def test_s3_url(self, s3_conn_mock):
-        with canopener.canopener('s3://blahblah/blah') as test_file:
+        with canopener('s3://blahblah/blah') as test_file:
             assert isinstance(test_file, FileMock)
 
 
