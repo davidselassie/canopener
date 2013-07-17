@@ -40,7 +40,7 @@ class canopener(object):
     """Convenience opener. Seamlessly decompresses .gz and .bz2 URLs and files.
     """
 
-    def __new__(cls, filename, mode='r'):
+    def __new__(cls, filename, mode='r', aws_access_key_id=None, aws_secret_access_key=None):
         # Open the base file stream.
         parse = urlparse.urlparse(filename)
         if parse.netloc:
@@ -48,7 +48,11 @@ class canopener(object):
                 raise ValueError("can't write to URLs")
             if parse.scheme == 's3':
                 from s3file import s3file
-                base_file = s3file(filename)
+                base_file = s3file(
+                    filename,
+                    aws_access_key_id=aws_access_key_id,
+                    aws_secret_access_key=aws_secret_access_key,
+                )
             else:
                 base_file = urllib2.urlopen(filename)
         else:

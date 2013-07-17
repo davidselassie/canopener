@@ -4,26 +4,28 @@ import tempfile
 import urlparse
 
 
-def make_s3_connection():
+def make_s3_connection(aws_access_key_id=None, aws_secret_access_key=None):
     """Mockable point for creating S3Connections."""
     from boto.s3.connection import S3Connection
-    return S3Connection()
+    return S3Connection(
+        aws_access_key_id=aws_access_key_id,
+        aws_secret_access_key=aws_secret_access_key,
+    )
 
 
 class s3file(object):
-    def __new__(cls, filename, mode='r'):
-        """Opens a local copy of an S3 URL.
-
-        Requires the AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY environment
-        vars to be set.
-        """
+    def __new__(cls, filename, mode='r', aws_access_key_id=None, aws_secret_access_key=None):
+        """Opens a local copy of an S3 URL."""
         parse = urlparse.urlparse(filename)
         if 'w' in mode:
             raise ValueError("can't write to S3")
         if parse.scheme != 's3':
             raise ValueError("s3file can't open non-S3 URLs")
 
-        conn = make_s3_connection()
+        conn = make_s3_connection(
+            aws_access_key_id=aws_access_key_id,
+            aws_secret_access_key=aws_secret_access_key,
+        )
         bucket = conn.get_bucket(parse.netloc)
         key = bucket.get_key(parse.path)
 
