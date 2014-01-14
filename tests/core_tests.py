@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 
+from __future__ import absolute_import
+from __future__ import unicode_literals
+
 import bz2
 import StringIO
 import gzip
@@ -9,9 +12,9 @@ import testify
 from testify import TestCase
 from testify import assert_raises
 
-from ..canopener import canopener
-from ..canopener import gzfile
-from ..canopener import bz2file
+from canopener import canopener
+from canopener import gzfile
+from canopener import bz2file
 
 
 # We can't use cStringIO, since we're mocking out the constructor.
