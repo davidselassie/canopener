@@ -16,7 +16,7 @@ setup(
     description=(
         'Python convenience function for opening compressed URLs and files.'
     ),
-    long_description=open('README.txt').read(),
+    long_description=open('README.rst').read(),
     setup_requires=['setuptools'],
     install_requires=[
         'boto',
