@@ -1,0 +1,3 @@
+-e .
+boto==2.23.0
+pystaticconfiguration==0.5.4.1

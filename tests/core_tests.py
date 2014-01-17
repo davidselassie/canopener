@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
+from __future__ import absolute_import
+from __future__ import unicode_literals
 
-import bz2
 import StringIO
 import gzip
 
@@ -9,9 +10,8 @@ import testify
 from testify import TestCase
 from testify import assert_raises
 
-from ..canopener import canopener
-from ..canopener import gzfile
-from ..canopener import bz2file
+from canopener import canopener
+from canopener.core import gzfile
 
 
 # We can't use cStringIO, since we're mocking out the constructor.
@@ -52,7 +52,8 @@ class CompressedFileTestCase(TestCase):
             assert isinstance(test_file, self.expected_class)
 
 
-# Becaue bz2 is implemented as a pure C module, we can't mock out stuff inside and test.
+# Becaue bz2 is implemented as a pure C module, we can't mock out stuff
+# inside and test.
 
 
 class GzipfileTestCase(CompressedFileTestCase):
@@ -62,8 +63,9 @@ class GzipfileTestCase(CompressedFileTestCase):
 
 @patch('__builtin__.open', FileMock)
 class CanopenerTestCase(TestCase):
-    # Becaue bz2 is implemented as a pure C module, we can't mock out stuff inside.
-    @patch('canopener.canopener.bz2file', FileMock)
+    # Becaue bz2 is implemented as a pure C module, we can't mock out
+    # stuff inside.
+    @patch('canopener.core.bz2file', FileMock)
     def test_bz2path(self):
         with canopener('blahblah.bz2') as test_file:
             assert isinstance(test_file, FileMock)
@@ -76,7 +78,7 @@ class CanopenerTestCase(TestCase):
         with canopener('blahblah') as test_file:
             assert isinstance(test_file, FileMock)
 
-    @patch('canopener.canopener.urllib2.urlopen', FileMock)
+    @patch('canopener.core.urllib2.urlopen', FileMock)
     def test_url(self):
         with canopener('http://blahblah/blah') as test_file:
             assert isinstance(test_file, FileMock)
