@@ -1,7 +1,7 @@
 .PHONY: test clean
 
 test: .tox
-	tox -e test
+	tox
 
 # Clean if we edit any of the tox dependencies.
 .tox: requirements.txt tox.ini

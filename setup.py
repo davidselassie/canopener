@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
-
 from __future__ import absolute_import
 from __future__ import unicode_literals
 
-from distutils.core import setup
+from setuptools import setup
 
 
 setup(
@@ -11,10 +10,12 @@ setup(
     version='0.1.1',
     author='David Selassie',
     author_email='selassid@gmail.com',
-    packages=['canopener'],
+    package='canopener',
     url='https://github.com/selassid/canopener',
     license='LICENSE.txt',
-    description='Python convenience function for opening compressed URLs and files.',
+    description=(
+        'Python convenience function for opening compressed URLs and files.'
+    ),
     long_description=open('README.txt').read(),
     setup_requires=['setuptools'],
     install_requires=[
