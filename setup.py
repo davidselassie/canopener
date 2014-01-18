@@ -18,6 +18,7 @@ setup(
     description=(
         'Python convenience function for opening compressed URLs and files.'
     ),
+    keywords='open file s3 url bzip bz2 gzip gz',
     include_package_data=True,
     long_description=resource_string(__name__, 'README.rst'),
     setup_requires=['setuptools'],
