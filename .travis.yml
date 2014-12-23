@@ -1,7 +1,14 @@
----
 language: python
 env:
-  - "TOXENV=py26"
-  - "TOXENV=py27"
-install: "pip install tox"
-script: "make test"
+  - TOXENV=py26
+  - TOXENV=py27
+install: pip install tox
+script: make test
+deploy:
+  provider: pypi
+  user: selassid
+  password:
+    secure: CAMiIdTnXclZzR34SKWlTUQt5nXicexay8OgMnAbjxEh3yBmFn9FQW0nEgvERFtFMG/6+0Frfdd9bXGDEE4eYSS7aliIo/V+LNNoFN7OrX4CROfvmuwOEBvqnrioAR2Dr+t3wBGDusBpjez+vu9wqcXrCYXwGpBsoFnCylgl3ZM=
+  "on":
+    tags: true
+    repo: selassid/canopener
