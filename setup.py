@@ -9,7 +9,7 @@ from setuptools import setup
 
 setup(
     name='canopener',
-    version='0.1.4',
+    version='0.1.5',
     author='David Selassie',
     author_email='selassid@gmail.com',
     packages=find_packages(exclude=['tests']),
