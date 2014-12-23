@@ -8,7 +8,7 @@ deploy:
   provider: pypi
   user: selassid
   password:
-    secure: CAMiIdTnXclZzR34SKWlTUQt5nXicexay8OgMnAbjxEh3yBmFn9FQW0nEgvERFtFMG/6+0Frfdd9bXGDEE4eYSS7aliIo/V+LNNoFN7OrX4CROfvmuwOEBvqnrioAR2Dr+t3wBGDusBpjez+vu9wqcXrCYXwGpBsoFnCylgl3ZM=
+    secure: X60x+IXLBJ710Ta5SR0nGO8/8E7YxPMDCh3on4JtvvPgVO44tnCd+nN19vL2H27ZdppyifN/rWl0AZ+7zV0Atsn3uE6C2+c1b8JC8SzYwxHVnONuG7PmplckJAcPlz5yNi8izBb87xsy6n+xfGzFIpu7PATpLevDf3jC8R4alNA=
   "on":
     tags: true
     all_branches: true
