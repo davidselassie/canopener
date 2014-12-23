@@ -2,6 +2,9 @@
 canopener
 =========
 
+.. image:: https://travis-ci.org/selassid/canopener.svg?branch=master
+    :target: https://travis-ci.org/selassid/canopener
+
 Python convenience function ``canopener(filename, mode='r')`` for opening files.
 
 Local files behave identically to ``open()``::
