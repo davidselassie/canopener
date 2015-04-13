@@ -2,8 +2,12 @@
 from __future__ import absolute_import
 from __future__ import unicode_literals
 
+try:
+    from urllib.parse import urlparse
+except ImportError:
+    from urlparse import urlparse
+
 import tempfile
-import urlparse
 
 from boto.s3.connection import S3Connection
 
@@ -25,7 +29,7 @@ class s3file(object):
         aws_secret_access_key=None,
     ):
         """Opens a local copy of an S3 URL."""
-        parse = urlparse.urlparse(filename)
+        parse = urlparse(filename)
         if 'w' in mode:
             raise ValueError("can't write to S3")
         if parse.scheme != 's3':

@@ -2,22 +2,33 @@
 from __future__ import absolute_import
 from __future__ import unicode_literals
 
-import StringIO
+try:
+    from io import StringIO
+except ImportError:
+    from StringIO import StringIO
 import gzip
 
-from mock import patch
-import testify
-from testify import TestCase
-from testify import assert_raises
+try:
+    from unittest.mock import patch
+except ImportError:
+    from mock import patch
+
+try:
+    import __builtin__ as builtins
+except ImportError:
+    import builtins
+
+from unittest import TestCase
+import pytest
 
 from canopener import canopener
 from canopener.core import gzfile
 
 
 # We can't use cStringIO, since we're mocking out the constructor.
-class FileMock(StringIO.StringIO):
+class FileMock(StringIO):
     def __init__(self, filename=None, mode=None):
-        StringIO.StringIO.__init__(self, '')
+        StringIO.__init__(self, '')
 
     def __enter__(self):
         return self
@@ -26,7 +37,7 @@ class FileMock(StringIO.StringIO):
         self.close()
 
 
-@patch('__builtin__.open', FileMock)
+@patch.object(builtins, 'open', FileMock)
 class CompressedFileTestCase(TestCase):
     __test__ = False
 
@@ -56,13 +67,13 @@ class CompressedFileTestCase(TestCase):
 # inside and test.
 
 
-class GzipfileTestCase(CompressedFileTestCase):
+class TestGzipfile(CompressedFileTestCase):
     opener = gzfile
     expected_class = gzip.GzipFile
 
 
-@patch('__builtin__.open', FileMock)
-class CanopenerTestCase(TestCase):
+@patch.object(builtins, 'open', FileMock)
+class TestCanopener(TestCase):
     # Becaue bz2 is implemented as a pure C module, we can't mock out
     # stuff inside.
     @patch('canopener.core.bz2file', FileMock)
@@ -78,13 +89,13 @@ class CanopenerTestCase(TestCase):
         with canopener('blahblah') as test_file:
             assert isinstance(test_file, FileMock)
 
-    @patch('canopener.core.urllib2.urlopen', FileMock)
+    @patch('canopener.core.urlopen', FileMock)
     def test_url(self):
         with canopener('http://blahblah/blah') as test_file:
             assert isinstance(test_file, FileMock)
 
     def test_cant_write_url(self):
-        with assert_raises(ValueError):
+        with pytest.raises(ValueError):
             canopener('http://blahblah/blah', 'w')
 
     @patch('canopener.s3file.make_s3_connection', autospec=True)
@@ -92,7 +103,3 @@ class CanopenerTestCase(TestCase):
     def test_s3_url(self, s3_conn_mock):
         with canopener('s3://blahblah/blah') as test_file:
             assert isinstance(test_file, FileMock)
-
-
-if __name__ == "__main__":
-    testify.run()

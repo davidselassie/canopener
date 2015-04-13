@@ -2,10 +2,15 @@
 from __future__ import absolute_import
 from __future__ import unicode_literals
 
+try:
+    from urllib.request import urlopen
+    from urllib.parse import urlparse
+except:
+    from urllib2 import urlopen
+    from urlparse import urlparse
+
 import bz2
 import gzip
-import urllib2
-import urlparse
 
 from canopener.s3file import s3file
 
@@ -56,7 +61,7 @@ class canopener(object):
         aws_secret_access_key=None
     ):
         # Open the base file stream.
-        parse = urlparse.urlparse(filename)
+        parse = urlparse(filename)
         if parse.netloc:
             if 'w' in mode:
                 raise ValueError("can't write to URLs")
@@ -68,7 +73,7 @@ class canopener(object):
                     aws_secret_access_key=aws_secret_access_key,
                 )
             else:
-                base_file = urllib2.urlopen(filename)
+                base_file = urlopen(filename)
         else:
             base_file = open(filename, mode)
 

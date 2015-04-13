@@ -1,3 +1,5 @@
+v0.1.6, 2015-04-13 -- Fixes license reading in setup. Converts to pytest. Tests pass under py34.
+v0.1.5, 2014-12-22 -- Adds package description keywords.
 v0.1.4, 2014-01-17 -- Uses find_packages.
 v0.1.3, 2014-01-17 -- Properly manifests text files.
 v0.1.2, 2014-01-16 -- Updates readme to rST.
